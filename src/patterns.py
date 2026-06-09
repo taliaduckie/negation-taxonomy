@@ -9,12 +9,15 @@ demonstration of the framework, not a production classifier.
 import re
 from taxonomy import NegationType, NegationInstance
 
-# Patterns that suggest δ (metalinguistic/discourse negation)
+# Patterns that suggest δ (metalinguistic/discourse negation).
+# Matched case-insensitively (see re.IGNORECASE in classify), so keep them lowercase.
 DELTA_PATTERNS = [
     r"\bdidn't say\b",
     r"\bnot .{0,20} but\b",
     r"\bit's not that\b",
-    r"\bI'm not saying\b",
+    r"\bi'm not saying\b",
+    # Negation retracted/upgraded across a dash: "Not bad — actually, it's excellent."
+    r"\bnot\b.*[—-]\s*(actually|instead|rather|i (said|mean|just))",
 ]
 
 # Affective/evaluative terms that suggest ε
@@ -31,9 +34,9 @@ def classify(text: str) -> NegationInstance | None:
 
     # Check for δ patterns first (most marked)
     for pat in DELTA_PATTERNS:
-        if re.search(pat, text_lower):
-            trigger = re.search(pat, text_lower).group()
-            return NegationInstance(text, NegationType.DELTA, trigger,
+        match = re.search(pat, text_lower, re.IGNORECASE)
+        if match:
+            return NegationInstance(text, NegationType.DELTA, match.group(),
                                     "metalinguistic or corrective negation")
 
     # Check for ε multi-word expressions
