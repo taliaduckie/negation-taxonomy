@@ -7,7 +7,7 @@ demonstration of the framework, not a production classifier.
 """
 
 import re
-from types import NegationType, NegationInstance
+from taxonomy import NegationType, NegationInstance
 
 # Patterns that suggest δ (metalinguistic/discourse negation)
 DELTA_PATTERNS = [

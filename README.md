@@ -33,7 +33,7 @@ negation-taxonomy/
 ├── src/
 │   ├── classify.py      # CLI classifier
 │   ├── patterns.py      # rule-based pattern matching
-│   └── types.py         # dataclass definitions
+│   └── taxonomy.py      # dataclass definitions
 ├── data/
 │   └── examples/        # annotated example sentences per type
 └── docs/
