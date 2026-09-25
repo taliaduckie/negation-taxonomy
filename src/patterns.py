@@ -47,7 +47,10 @@ def classify(text: str) -> NegationInstance | None:
 
     # Default to τ if a negation token is present
     for tok in NEGATION_TOKENS:
-        if re.search(r'\b' + tok + r'\b', text_lower):
+        # "n't" is a suffix ("isn't", "can't"), so there is no word boundary
+        # in front of it; a leading \b would never match.
+        prefix = "" if tok.startswith("n't") else r"\b"
+        if re.search(prefix + re.escape(tok) + r"\b", text_lower):
             return NegationInstance(text, NegationType.TAU, tok,
                                     "truth-conditional negation")
 
