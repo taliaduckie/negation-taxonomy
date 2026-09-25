@@ -2,7 +2,7 @@
 patterns.py
 Heuristic pattern matching for negation type classification.
 
-Not a complete system — designed as an annotation assist and
+Not a complete system at all at all. it's designed as an annotation assist and
 demonstration of the framework, not a production classifier.
 """
 
@@ -10,7 +10,7 @@ import re
 from taxonomy import NegationType, NegationInstance
 
 # Pronouns that can open a clause. Used to tell a corrective "not X but Y"
-# (Horn's classic, where Y replaces X) from a merely concessive "but" that
+# (Horn's classic blunder (not a blunder just funny to say that hohohoh), where Y replaces X) from a merely concessive "but" that
 # starts a new clause ("not raining, but it is cold").
 _CLAUSE_OPENERS = r"(i|we|you|he|she|it|they|there|that|this|not|n't)\b"
 
