@@ -26,7 +26,14 @@ EPSILON_LEXICON = {
     "not the best", "not terrible", "not thrilled",
 }
 
-NEGATION_TOKENS = {"not", "n't", "no", "never", "neither", "nor"}
+# Ordered so that the reported trigger is deterministic when several appear.
+# Multi-word tokens come first so "no one" is reported rather than just "no".
+NEGATION_TOKENS = (
+    "no one",
+    "not", "n't", "no", "never", "neither", "nor",
+    # negative quantifiers / pronouns
+    "nothing", "nobody", "none", "nowhere",
+)
 
 
 def classify(text: str) -> NegationInstance | None:
