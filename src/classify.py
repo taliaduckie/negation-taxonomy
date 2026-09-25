@@ -12,7 +12,7 @@ import argparse
 from patterns import classify
 from taxonomy import NegationType
 
-# One accent color per type. Falls back to plain text if rich isn't installed.
+# One accent color per type and falls back to plain text if rich isn't installed.
 TYPE_COLOR = {
     NegationType.TAU: "cyan",
     NegationType.EPSILON: "magenta",
