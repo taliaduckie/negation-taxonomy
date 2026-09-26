@@ -1,7 +1,8 @@
 """
 test_examples.py
 Data-driven tests: every line in data/examples/<type>.txt must classify
-to the negation type named by its file.
+to the negation type named by its file, and every line in
+data/examples/none.txt must not be detected as negation at all.
 
 Run with:  pytest
 """
@@ -29,18 +30,20 @@ FILE_TO_TYPE = {
 }
 
 
+def _load_sentences(stem):
+    path = EXAMPLES_DIR / f"{stem}.txt"
+    return [line.strip() for line in path.read_text(encoding="utf-8").splitlines()
+            if line.strip()]
+
+
 def _load_cases():
-    cases = []
-    for stem, expected in FILE_TO_TYPE.items():
-        path = EXAMPLES_DIR / f"{stem}.txt"
-        for line in path.read_text(encoding="utf-8").splitlines():
-            sentence = line.strip()
-            if sentence:
-                cases.append((sentence, expected))
-    return cases
+    return [(sentence, expected)
+            for stem, expected in FILE_TO_TYPE.items()
+            for sentence in _load_sentences(stem)]
 
 
 CASES = _load_cases()
+NONE_CASES = _load_sentences("none")
 
 
 @pytest.mark.parametrize("sentence,expected", CASES, ids=[c[0] for c in CASES])
@@ -50,4 +53,13 @@ def test_example_classifies_to_its_type(sentence, expected):
     assert result.neg_type is expected, (
         f"{sentence!r} classified as {result.neg_type.value} "
         f"(trigger {result.trigger!r}), expected {expected.value}"
+    )
+
+
+@pytest.mark.parametrize("sentence", NONE_CASES)
+def test_non_negation_is_not_detected(sentence):
+    result = classify(sentence)
+    assert result is None, (
+        f"{sentence!r} classified as {result.neg_type.value} "
+        f"(trigger {result.trigger!r}), expected no negation"
     )
