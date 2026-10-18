@@ -35,7 +35,8 @@ negation-taxonomy/
 │   ├── patterns.py      # rule-based pattern matching
 │   └── taxonomy.py      # dataclass definitions
 ├── data/
-│   └── examples/        # annotated example sentences per type
+│   └── examples/        # example sentences per type; none.txt has no negation
+│       └── hard/        # believed-correct labels the rules can't get yet (xfail)
 └── docs/
     └── framework.md     # extended theoretical notes
 ```

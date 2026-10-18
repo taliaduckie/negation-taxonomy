@@ -30,20 +30,26 @@ FILE_TO_TYPE = {
 }
 
 
-def _load_sentences(stem):
-    path = EXAMPLES_DIR / f"{stem}.txt"
+def _load_sentences(stem, subdir=""):
+    path = EXAMPLES_DIR / subdir / f"{stem}.txt"
+    if not path.exists():
+        return []
     return [line.strip() for line in path.read_text(encoding="utf-8").splitlines()
             if line.strip()]
 
 
-def _load_cases():
+def _load_cases(subdir=""):
     return [(sentence, expected)
             for stem, expected in FILE_TO_TYPE.items()
-            for sentence in _load_sentences(stem)]
+            for sentence in _load_sentences(stem, subdir)]
 
 
 CASES = _load_cases()
 NONE_CASES = _load_sentences("none")
+# data/examples/hard/<type>.txt: believed to be that type, but the rules
+# can't get them yet. Strict xfail, so a fix that starts catching one is
+# reported and the sentence can be promoted. See hard/README.md.
+HARD_CASES = _load_cases("hard")
 
 
 @pytest.mark.parametrize("sentence,expected", CASES, ids=[c[0] for c in CASES])
@@ -63,3 +69,10 @@ def test_non_negation_is_not_detected(sentence):
         f"{sentence!r} classified as {result.neg_type.value} "
         f"(trigger {result.trigger!r}), expected no negation"
     )
+
+
+@pytest.mark.xfail(strict=True, reason="known gap in the rule set; see data/examples/hard/README.md")
+@pytest.mark.parametrize("sentence,expected", HARD_CASES, ids=[c[0] for c in HARD_CASES])
+def test_hard_example_classifies_to_its_type(sentence, expected):
+    result = classify(sentence)
+    assert result is not None and result.neg_type is expected
