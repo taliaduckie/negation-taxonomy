@@ -17,7 +17,6 @@ TYPE_COLOR = {
     NegationType.TAU: "cyan",
     NegationType.EPSILON: "magenta",
     NegationType.DELTA: "yellow",
-    NegationType.AMBIGUOUS: "dim",
 }
 
 

@@ -1,5 +1,5 @@
 """
-types.py
+taxonomy.py
 Core dataclasses for the τ/ε/δ negation taxonomy.
 """
 
@@ -11,7 +11,6 @@ class NegationType(Enum):
     TAU = "τ"          # truth-conditional
     EPSILON = "ε"      # expressive/evaluative
     DELTA = "δ"        # discourse/metalinguistic
-    AMBIGUOUS = "?"    # underspecified
 
 
 @dataclass
