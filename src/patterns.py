@@ -116,36 +116,66 @@ def _corrective_restatement(text_lower: str) -> str | None:
     return first
 
 
-def classify(text: str) -> NegationInstance | None:
-    text_lower = text.lower()
-
-    # Check for δ patterns first (most marked)
+def _match_delta_pattern(text_lower: str) -> str | None:
     for pat in DELTA_PATTERNS:
         match = re.search(pat, text_lower, re.IGNORECASE)
         if match:
-            return NegationInstance(text, NegationType.DELTA, match.group().strip(),
-                                    "metalinguistic or corrective negation")
+            return match.group().strip()
+    return None
 
-    trigger = _corrective_restatement(text_lower)
-    if trigger:
-        return NegationInstance(text, NegationType.DELTA, trigger,
-                                "corrective restatement; the second clause replaces the first")
 
-    # Check for ε multi-word expressions and constructions
+def _match_epsilon_lexicon(text_lower: str) -> str | None:
     for expr in EPSILON_LEXICON:
         if expr in text_lower:
-            return NegationInstance(text, NegationType.EPSILON, expr,
-                                    "evaluative negation; encodes speaker stance")
+            return expr
+    return None
+
+
+def _match_epsilon_pattern(text_lower: str) -> str | None:
     for pat in EPSILON_PATTERNS:
         match = re.search(pat, text_lower)
         if match:
-            return NegationInstance(text, NegationType.EPSILON, match.group(),
-                                    "evaluative negation; hedged or understated stance")
+            return match.group()
+    return None
 
-    # Default to τ if a negation token is present
-    tok = find_negation_token(text_lower)
-    if tok:
-        return NegationInstance(text, NegationType.TAU, tok,
-                                "truth-conditional negation")
 
+# The classifier, as an ordered list of stages. The first stage whose matcher
+# returns a trigger decides the type. Order encodes markedness: δ cues beat
+# ε cues, and any leftover negation token is τ.
+Stage = tuple  # (name, NegationType, matcher, rationale)
+STAGES: tuple[Stage, ...] = (
+    ("δ pattern", NegationType.DELTA, _match_delta_pattern,
+     "metalinguistic or corrective negation"),
+    ("δ restatement", NegationType.DELTA, _corrective_restatement,
+     "corrective restatement; the second clause replaces the first"),
+    ("ε lexicon", NegationType.EPSILON, _match_epsilon_lexicon,
+     "evaluative negation; encodes speaker stance"),
+    ("ε construction", NegationType.EPSILON, _match_epsilon_pattern,
+     "evaluative negation; hedged or understated stance"),
+    ("τ token", NegationType.TAU, find_negation_token,
+     "truth-conditional negation"),
+)
+
+
+def fire(text: str) -> list[tuple[str, NegationType, str]]:
+    """
+    Run every stage and return all that match, as (stage name, type, trigger),
+    in stage order. classify() takes the first; this exposes the rest so the
+    ordering decision can be audited (see audit.py).
+    """
+    text_lower = text.lower()
+    hits = []
+    for name, neg_type, matcher, _ in STAGES:
+        trigger = matcher(text_lower)
+        if trigger:
+            hits.append((name, neg_type, trigger))
+    return hits
+
+
+def classify(text: str) -> NegationInstance | None:
+    text_lower = text.lower()
+    for _, neg_type, matcher, rationale in STAGES:
+        trigger = matcher(text_lower)
+        if trigger:
+            return NegationInstance(text, neg_type, trigger, rationale)
     return None

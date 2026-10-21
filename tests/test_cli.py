@@ -48,3 +48,13 @@ def test_cli_requires_text_argument():
     proc = run_cli()
     assert proc.returncode != 0
     assert "--text" in proc.stderr
+
+
+def test_audit_runs():
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "src" / "audit.py"), "--hard"],
+        capture_output=True, text=True, env=ENV,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert "Confusion" in proc.stdout
+    assert "Order-dependent" in proc.stdout

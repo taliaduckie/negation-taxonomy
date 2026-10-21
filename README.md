@@ -17,6 +17,7 @@ closer to δ: negating the implicature of willingness, not the proposition.
 pip install -r requirements.txt
 python src/classify.py --text "Not bad."
 python src/classify.py --text "I didn't say she STOLE the money."
+python src/audit.py --hard     # confusion table + order-dependent sentences
 ```
 
 ## Framework
@@ -32,6 +33,7 @@ python src/classify.py --text "I didn't say she STOLE the money."
 negation-taxonomy/
 ├── src/
 │   ├── classify.py      # CLI classifier
+│   ├── audit.py         # confusion table and stage-order audit over data/
 │   ├── patterns.py      # rule-based pattern matching
 │   └── taxonomy.py      # dataclass definitions
 ├── data/
