@@ -33,7 +33,7 @@ DELTA_PATTERNS = [
     r"\bit's not that " + _CLAUSE_OPENERS,
     r"\bi'm not saying\b",
     # Negation retracted/upgraded across a dash: "Not bad — actually, it's excellent."
-    r"\bnot\b.*[—-]\s*(actually|instead|rather|i (said|mean|just))",
+    r"\bnot\b.*[—-]\s*(actually|instead|rather|more like|i (said|mean|just))",
 ]
 
 # Second clauses that are hedges on the first, not restatements of it:
@@ -60,7 +60,8 @@ EPSILON_LEXICON = (
 # Productive ε constructions, as regexes over the lowercased text.
 EPSILON_PATTERNS = [
     # Degree-hedged evaluation: "not too shabby", "not half bad", "not exactly ideal".
-    r"\bnot (too|so|that|half|exactly|particularly|especially|entirely|altogether)\b",
+    # Excludes the literal "not too X to VERB" ("not too deep to wade in"), which is τ.
+    r"\bnot (too|so|that|half|exactly|particularly|especially|entirely|altogether)\b(?! \w+ to\b)",
     # Negated superlative: "not my finest hour", "not the sharpest tool".
     r"\bnot (my|the|his|her|their|our|your) (\w+est|favou?rite|best|worst|most)\b",
     # Litotes over a negative-prefixed adjective: "not unpleasant", "wasn't impossible".

@@ -32,25 +32,53 @@ But natural language negation is richer:
 the first that fires, so the stage ordering in `patterns.py` can be checked
 against the data rather than asserted.
 
-On the current 104 sentences, 4 are decided by ordering alone:
+### Minimal pairs
 
-- 3 are labeled δ and carry an ε cue as well: "not bad" inside "Not bad —
-  actually, it's excellent", and the degree-hedge reading of "not that"
-  inside "It's not that I don't care". In each the δ reading is clearly
-  right, which supports δ-before-ε. It also shows that the ε cue is
-  *present*: the correction is built on top of an evaluative negation. That
-  is weak evidence for open question 1 in the direction of ε being a layer
-  δ can operate on, rather than a sibling.
-- 1 is labeled τ and misfires as δ: "She did not attend the meeting, she was
-  sick" has the surface shape of a corrective restatement but is causal.
-  This is the known cost of the restatement heuristic (see
-  `data/examples/hard/tau.txt`).
+`epsilon.txt` and `delta.txt` contain seven minimal pairs: an ε hedge on its
+own, and the same hedge upgraded into a correction.
 
-No sentence in the set has an ε cue and a δ cue that point to *different*
-plausible readings, so the data does not yet discriminate between "ε is a
-subtype of δ" and "ε and δ are independent". Sentences that would: an
-evaluative hedge that is *not* also a correction but still carries a δ cue,
-or a correction with no evaluative content at all that the ε rules catch.
+| ε | δ |
+|---|---|
+| It's not too hot in here. | It's not too hot, it's too cold. |
+| I'm not thrilled. | I'm not thrilled, I'm ecstatic. |
+| Not exactly. | Not exactly — more like a disaster. |
+| That's not great. | That's not great, that's catastrophic. |
+
+On the current 120 sentences, 10 are decided by stage ordering. Nine are
+labeled δ and also carry an ε cue; the ε cue is the hedge the correction is
+built on. In every one the δ reading is clearly right, so δ-before-ε holds.
+The tenth is the known causal-comma false positive, "She did not attend the
+meeting, she was sick" (see `data/examples/hard/tau.txt`).
+
+### What this says about open question 1
+
+Every ε-and-δ collision in the data runs the same way: an evaluative
+negation is present, and a second clause or dash retracts or upgrades it.
+There is no sentence where a δ cue is present and the ε reading should win.
+That is consistent with ε being a layer δ can operate on, and says nothing
+either way about ε being a *subtype* of δ, since pure-ε sentences ("Not
+bad.") and pure-δ sentences ("I didn't say she stole it.") both exist and
+neither needs the other.
+
+The sentence that would actually press the question is one like
+
+> I'm not saying it's bad.
+
+It negates a speech act (δ in form) in order to perform a stance (ε in
+function), and the two readings are not a correction built on a hedge; they
+are the same negation described at two levels. It is deliberately *not* in
+the example files, because labeling it would decide the question rather
+than test it. A next step would be to collect ten or twenty such sentences
+and see whether annotators split, which would argue for independent
+dimensions, or agree, which would argue for one being primary.
+
+### Known heuristic costs
+
+- `not too X to VERB` is literal degree, not a hedge: "not too deep to wade
+  in" is τ. The ε degree pattern now excludes it.
+- A fragment restatement with no subject pronoun ("Not my favorite — my
+  least favorite, if anything") is δ but the restatement rule cannot see it.
+  It lives in `hard/delta.txt`.
 
 ## Annotation Guidelines
 
