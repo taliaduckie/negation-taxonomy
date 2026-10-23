@@ -18,6 +18,8 @@ pip install -r requirements.txt
 python src/classify.py --text "Not bad."
 python src/classify.py --text "I didn't say she STOLE the money."
 python src/audit.py --hard     # confusion table + order-dependent sentences
+python src/annotate.py data/probe/stance_vs_speech_act.txt --annotator yourname
+python src/annotate.py data/probe/stance_vs_speech_act.txt --report
 ```
 
 ## Framework
@@ -34,11 +36,14 @@ negation-taxonomy/
 ├── src/
 │   ├── classify.py      # CLI classifier
 │   ├── audit.py         # confusion table and stage-order audit over data/
+│   ├── annotate.py      # hand-label probe sets, report inter-annotator agreement
 │   ├── patterns.py      # rule-based pattern matching
 │   └── taxonomy.py      # dataclass definitions
 ├── data/
 │   └── examples/        # example sentences per type; none.txt has no negation
 │       └── hard/        # believed-correct labels the rules can't get yet (xfail)
+│   ├── probe/           # unlabeled sentences that test an open question
+│   └── annotations/     # per-annotator labels for probe sets (csv)
 └── docs/
     └── framework.md     # extended theoretical notes
 ```

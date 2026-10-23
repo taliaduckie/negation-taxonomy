@@ -68,9 +68,15 @@ It negates a speech act (δ in form) in order to perform a stance (ε in
 function), and the two readings are not a correction built on a hedge; they
 are the same negation described at two levels. It is deliberately *not* in
 the example files, because labeling it would decide the question rather
-than test it. A next step would be to collect ten or twenty such sentences
-and see whether annotators split, which would argue for independent
-dimensions, or agree, which would argue for one being primary.
+than test it.
+
+Twenty such sentences are in `data/probe/stance_vs_speech_act.txt`. Label
+them with `python src/annotate.py <file> --annotator <name>` and compare
+annotators with `--report`, which gives raw agreement and Cohen's kappa. If
+annotators split between ε and δ, the dimensions look independent; if they
+agree, one is primary. The report also shows the rule-based prediction per
+sentence; on this set it says τ for most of them, which is itself a finding:
+the rules have no cue for stance performed through a negated speech act.
 
 ### Known heuristic costs
 
